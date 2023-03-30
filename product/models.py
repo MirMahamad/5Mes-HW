@@ -8,6 +8,10 @@ class Category(models.Model):
     def products_count(self):
         return self.products.count()
 
+    @property
+    def products_list(self):
+        return [product.title for product in self.products.all()]
+
     def __str__(self):
         return self.name
 
@@ -16,11 +20,12 @@ class Product(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
     price = models.IntegerField(null=True)
-    category = models.ManyToManyField('Category', related_name='products')
+    category = models.ForeignKey('Category', on_delete=models.CASCADE,
+                                 related_name='products', null=True)
 
     @property
     def rating(self):
-        stars = [review.start for review in self.reviews.all()]
+        stars = [review.stars for review in self.reviews.all()]
         return round(sum(stars) / len(stars), 2)
 
     @property
@@ -33,10 +38,10 @@ class Product(models.Model):
 
 
 class Review(models.Model):
-    STARS = ((i, '*' * i) for i in range(1, 6))
+    CHOICES = ((i, '*' * i) for i in range(1, 6))
     product = models.ForeignKey('Product', on_delete=models.CASCADE,
                                 related_name='reviews')
-    stars = models.IntegerField(choices=STARS, null=True)
+    stars = models.IntegerField(choices=CHOICES, null=True)
     text = models.TextField(blank=True, null=True)
 
     @property

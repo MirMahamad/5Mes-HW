@@ -1,11 +1,11 @@
 from rest_framework import serializers
-from .models import Category, Product, Review
+from product.models import Category, Product, Review
 
 
 class CategorySerializers(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = 'id name products_count'.split()
+        fields = 'id name products_count products_list'.split()
 
 
 class ProductSerializers(serializers.ModelSerializer):
@@ -21,8 +21,8 @@ class ReviewSerializers(serializers.ModelSerializer):
 
 
 class ProductsReviewsSerializers(serializers.ModelSerializer):
-    review = ReviewSerializers(many=True)
+    # reviews = ReviewSerializers(many=True)
 
     class Meta:
         model = Product
-        fields = 'id title reviews rating'.split()
+        fields = 'id reviews rating'.split()
