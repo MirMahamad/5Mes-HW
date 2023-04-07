@@ -3,15 +3,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
-from .serializers import UserLoginValidateSerializer, UserCreateValidateSerializer, ConfirmCodeValidateSerializer
+from user.serializers import UserLoginValidateSerializer, UserCreateValidateSerializer, ConfirmCodeValidateSerializer
 from django.contrib.auth.models import User
 from rest_framework.views import APIView
-from .models import ConfirmUserCode
+from user.models import ConfirmUserCode
 from random import choices
 
 
 class AuthorizationAPIView(APIView):
-    def post(self, request):
+    def authorization_api_view(self, request):
         serializer = UserLoginValidateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = authenticate(**serializer.validated_data)

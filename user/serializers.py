@@ -1,17 +1,15 @@
 import re
-
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from rest_framework.exceptions import ValidationError
-from .models import ConfirmUserCode
-
+from user.models import ConfirmUserCode
 
 class UserValidateSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(min_length=8)
 
     def validate_password(self, password):
-        if not re.match('^[a-zA-Z0-9]+$', password):
+        if not re.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$', password):
             raise ValidationError('Password should consist only letters and numbers!')
         return password
 
