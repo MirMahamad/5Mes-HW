@@ -9,7 +9,7 @@ class UserValidateSerializer(serializers.Serializer):
     password = serializers.CharField(min_length=8)
 
     def validate_password(self, password):
-        if not re.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$', password):
+        if re.match('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$', password):
             raise ValidationError('Password should consist only letters and numbers!')
         return password
 
