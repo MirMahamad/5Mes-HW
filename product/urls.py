@@ -1,14 +1,21 @@
-from django.contrib import admin
 from django.urls import path
-from product import views
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/v1/categories/', views.categories_list_api_view),
-    path('api/v1/categories/<int:id>/', views.categories_detail_api_view),
-    path('api/v1/products/', views.products_list_api_view),
-    path('api/v1/products/<int:id>/', views.products_detail_api_view),
-    path('api/v1/reviews/', views.reviews_list_api_view),
-    path('api/v1/reviews/<int:id>/', views.reviews_detail_api_view),
-    path('api/v1/products/reviews/', views.products_reviews_api_view),
+    path('api/v1/categories/', views.CategoryModelViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('api/v1/categories/<int:pk>/', views.CategoryModelViewSet.as_view({'get': 'retrieve', 'put': 'update',
+                                                                            'delete': 'destroy',
+                                                                            'patch': 'partial_update'})),
+    path('api/v1/products/', views.ProductsModelViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('api/v1/products/<int:pk>/', views.ProductsModelViewSet.as_view({'get': 'retrieve', 'put': 'update',
+                                                                          'delete': 'destroy',
+                                                                          'patch': 'partial_update'})),
+    path('api/v1/reviews/', views.ReviewModelViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('api/v1/reviews/<int:pk>/', views.ReviewModelViewSet.as_view({'get': 'retrieve', 'put': 'update',
+                                                                       'delete': 'destroy',
+                                                                       'patch': 'partial_update'})),
+    path('api/v1/products/reviews/', views.RatingModelViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('api/v1/products/reviews/<int:pk>/', views.RatingModelViewSet.as_view({'get': 'retrieve', 'put': 'update',
+                                                                                'delete': 'destroy',
+                                                                                'patch': 'partial_update'})),
 ]

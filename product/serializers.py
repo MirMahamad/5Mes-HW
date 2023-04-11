@@ -1,6 +1,9 @@
+#-----------------------------------------------------------------------------------------------------------------------
 from rest_framework import serializers
-from product.models import Category, Product, Review, Tag
 from rest_framework.exceptions import ValidationError
+#-----------------------------------------------------------------------------------------------------------------------
+from product.models import Category, Product, Review, Tag
+#-----------------------------------------------------------------------------------------------------------------------
 
 
 class CategorySerializers(serializers.ModelSerializer):
@@ -48,12 +51,11 @@ class ProductValidateSerializers(serializers.Serializer):
             return i
 
     def validate_tag(self, tags):
-        try:
-            tag = Tag.objects.fitler(tag=tags['tag'])
-            if tag:
-                return 'This ids doesnt exist '
-        except TypeError:
-            return super().validate(tags)
+        filtered_tags = Tag.objects.filter(id__in=tags)
+        if len(tags) == filtered_tags.count():
+            return tags
+        lst_ = {i['id'] for i in filtered_tags.values_list().values()}
+        raise ValidationError(f'This ids doesnt exist {set(tags).difference(lst_)}')
 
 
 class ReviewValidateSerializers(serializers.Serializer):
@@ -63,7 +65,7 @@ class ReviewValidateSerializers(serializers.Serializer):
 
     def validate_product_id(self, products_id):
         try:
-            Review.objects.get(id=products_id)
+            Review.objects.get(product_id=products_id)
         except Product.DoesNotExist:
             raise ValidationError(f'Review with id ({products_id}) not found')
         return products_id
